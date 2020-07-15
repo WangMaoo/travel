@@ -19,4 +19,13 @@ public interface UserMapper {
      */
     @Insert("insert into tab_user values(null,#{username},#{password},#{name},#{birthday},#{sex},#{telephone},#{email})")
     public int register(User user);
+
+    /**
+     * 登陆
+     * @param user
+     * @return
+     */
+    @Select("select * from tab_user where username= #{username} and password=#{password}")
+    User login(User user);
+
 }
