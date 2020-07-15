@@ -18,7 +18,7 @@ public interface UserMapper {
      * @return
      */
     @Insert("insert into tab_user values(null,#{username},#{password},#{name},#{birthday},#{sex},#{telephone},#{email})")
-    public int register(User user);
+    int register(User user);
 
     /**
      * 登陆
@@ -28,4 +28,11 @@ public interface UserMapper {
     @Select("select * from tab_user where username= #{username} and password=#{password}")
     User login(User user);
 
+    /**
+     * 检测是否已经注册
+     * @param username
+     * @return
+     */
+    @Select("select * from tab_user where username = #{username}")
+    int usernameStatus(String username);
 }

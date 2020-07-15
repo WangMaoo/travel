@@ -36,4 +36,11 @@ public class UserService {
         User login = mapper.login(user);
         return login;
     }
+
+    public boolean usernameStatus(String username) {
+        SqlSession sqlSession = MybatisUtils.getSqlSession();
+        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        int i = mapper.usernameStatus(username);
+        return i > 0;
+    }
 }

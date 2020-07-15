@@ -136,4 +136,21 @@ public class UserServlet extends BeanServlet {
             e.printStackTrace();
         }
     }
+
+    public void usernameStatus(HttpServletRequest request,HttpServletResponse response) {
+        try {
+            String username = request.getParameter("usernameStatus");
+            System.out.println(username);
+            UserService userService = new UserService();
+            boolean flag = userService.usernameStatus(username);
+            if (flag) {
+                response.getWriter().print(1);
+            } else {
+                response.getWriter().print(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
