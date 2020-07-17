@@ -25,7 +25,7 @@ public class UserService {
         String md5 = Md5Util.getMD5(user.getPassword());
         user.setPassword(md5);
         int register = mapper.register(user);
-        sqlSession.close();
+        MybatisUtils.closeSession(sqlSession);
         return register > 0;
     }
 
@@ -34,6 +34,7 @@ public class UserService {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         user.setPassword(Md5Util.getMD5(user.getPassword()));
         User login = mapper.login(user);
+        MybatisUtils.closeSession(sqlSession);
         return login;
     }
 
@@ -41,6 +42,7 @@ public class UserService {
         SqlSession sqlSession = MybatisUtils.getSqlSession();
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         int i = mapper.usernameStatus(username);
+        MybatisUtils.closeSession(sqlSession);
         return i > 0;
     }
 }
