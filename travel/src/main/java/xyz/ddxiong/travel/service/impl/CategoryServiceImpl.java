@@ -27,6 +27,10 @@ public class CategoryServiceImpl implements CategoryService {
         Jedis jedis = JedisUtil.getJedis();
         String categoryJson = jedis.get("CategoryJosn");
         try {
+            /**
+             * 判断redis中是否有数据,没有调用service方法取到数据
+             * 将取到的数据转化为json格式返回
+             */
             if (categoryJson == null) {
                 SqlSession sqlSession = MybatisUtils.getSqlSession();
                 CategoryMapper mapper = sqlSession.getMapper(CategoryMapper.class);

@@ -70,11 +70,10 @@
         let url = "categoryServlet"
         let params = {"action":"findCategory"}
         $.post(url,params,function (resultData) {
-            let categoryAllStr=``
-            $(".nav").html(`<li class="nav-active"><a href="index.html">首页</a></li>`)
+            let categoryAllStr=`<li class="nav-active"><a href="index.html">首页</a></li>`
             for (let i = 0; i < resultData.length; i++) {
                 let categoryStr = resultData[i];
-                categoryAllStr += ` <li><a href="route_list.html?${categoryStr.cid}">${categoryStr.cname}</a></li>`
+                categoryAllStr += ` <li><a href="route_list.html?cid=${categoryStr.cid}">${categoryStr.cname}</a></li>`
             }
             categoryAllStr += `<li><a href="favoriterank.html">收藏排行榜</a></li>`
             $(".nav").html(categoryAllStr)

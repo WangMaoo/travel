@@ -24,8 +24,8 @@
                     <span>商品信息</span>
                     <span class="jg">价格</span>
                 </div>
-                <ul>
-                    <li>
+                <ul id="routeId">
+                    <!--<li>
                         <div class="img"><img src="images/04-search_03.jpg" width="299px" alt=""></div>
                         <div class="text1">
                             <p>【减100元 含除夕/春节出发】广州增城三英温泉度假酒店/自由行套票</p>
@@ -72,15 +72,15 @@
                             </p>
                             <p><a href="route_detail.html">查看详情</a></p>
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
                 <div class="page_num_inf">
-                    <i></i> 共
-                    <span>12</span>页<span>132</span>条
+                    <!--<i></i> 共
+                    <span>12</span>页 / <span>132</span>条-->
                 </div>
                 <div class="pageNum">
                     <ul id="laypage">
-                        <li><a href="">首页</a></li>
+                        <!--<li><a href="">首页</a></li>
                         <li class="threeword"><a href="#">上一页</a></li>
                         <li><a href="#">1</a></li>
                         <li><a href="#">2</a></li>
@@ -93,7 +93,7 @@
                         <li><a href="#">9</a></li>
                         <li><a href="#">10</a></li>
                         <li class="threeword"><a href="javascript:;">下一页</a></li>
-                        <li class="threeword"><a href="javascript:;">末页</a></li>
+                        <li class="threeword"><a href="javascript:;">末页</a></li>-->
                     </ul>
                 </div>
             </div>
@@ -153,6 +153,92 @@
 <div id="footer"></div>
 <!--导入布局js，共享header和footer-->
 <script type="text/javascript" src="js/include.js"></script>
+<!-- 导入getParameter.js文件,用于解析浏览器地址栏 -->
+<script typeof="text/JavaScript" src="js/getParameter.js"></script>
 </body>
+<script>
+    //页面加载成功后,调用函数,在函数中发送ajax请求,分页查询分类下的线路信息
+    $(function () {
+        //初始化:每页显示条数和当前页码
+        var pageSize = 10;
+        var pageNumber = 1;
+        findRouteByPage(pageSize,pageNumber);
+    });
+    // 发送ajax请求,分页查询分类下的线路信息
+    function findRouteByPage(pageSize,pageNumber){
+        // 解析浏览器地址栏地址,获取参数的值 (调用js工具)
+        var cid = getParameter("cid");
+        //alert(cid);
+        var url = "findRoutePageServlet";
+        var params = {
+            "action":"findRoutePage", // 请求标识
+            "pageSize":pageSize, // 每页显示条数
+            "pageNumber":pageNumber, // 当前页页码
+            "cid":cid // 请求条件, 分类的cid值
+        };
+        $.get(url,params,function (resultData) {
+            var routeList = resultData.data; // 当前页面的数据信息
+            var pageNumber = resultData.pageNumber; // 当前页页码
+            var totalCount = resultData.totalCount; // 总条数
+            var totalPage = resultData.totalPage; // 总页数
+            var start = resultData.start;
+            var end = resultData.end;
+            //-------- 展示当前页面的线路信息
+            $("#routeId").html("");
+            for (let i = 0; i < routeList.length; i++) {
+                var route = routeList[i];
+                $("#routeId").append(`<li>
+                        <div class="img"><img src="${route.rimage}" width="299px" alt=""></div>
+                        <div class="text1">
+                            <p>${route.rname}</p>
+                            <br/>
+                            <p>${route.routeIntroduce}</p>
+                        </div>
+                        <div class="price">
+                            <p class="price_num">
+                                <span>&yen;</span>
+                                <span>${route.price}</span>
+                                <span>起</span>
+                            </p>
+                            <p><a href="route_detail.html">查看详情</a></p>
+                        </div>
+                    </li>`);
+            }
 
+
+
+
+            //--------- 展示总页数和总条数
+            $(".page_num_inf").html(`<i></i> 共
+                    <span>${totalPage}</span>页 / <span>${totalCount}</span>条`);
+            //--------- 展示分页条
+            $("#laypage").html("");
+            // 首页
+            $("#laypage").prepend(`<li class="threeword"><a href="JavaScript:findRouteByPage(${pageSize},1)">首页</a></li>`);
+
+            // 上一页
+            if(pageNumber>1){
+                $("#laypage").append(`<li class="threeword"><a href="JavaScript:findRouteByPage(${pageSize},${pageNumber-1})">上一页</a></li>`);
+            }
+            // 展示中间的页码
+            for (let i = start; i <=end; i++) {
+                if(pageNumber==i){
+                    $("#laypage").append(`<li style="background-color: yellow;"><a href="JavaScript:findRouteByPage(${pageSize},${i});">${i}</a></li>`);
+                }else {
+                    $("#laypage").append(`<li><a href="JavaScript:findRouteByPage(${pageSize},${i});">${i}</a></li>`);
+                }
+            }
+
+            // 下一页
+            if(pageNumber<totalPage){
+                $("#laypage").append(`<li class="threeword"><a href="JavaScript:findRouteByPage(${pageSize},${pageNumber+1})">下一页</a></li>`);
+            }
+            // 尾页
+            $("#laypage").append(`<li class="threeword"><a href="JavaScript:findRouteByPage(${pageSize},${totalPage})">末页</a></li>`);
+
+            // 定位到页面的指定位置
+            window.scrollTo(0,0);
+        },"json");
+    }
+</script>
 </html>
