@@ -45,7 +45,6 @@ public class FindRoutePageServlet extends BeanServlet {
          */
         ObjectMapper objectMapper = new ObjectMapper();
         String RoutePageJson = objectMapper.writeValueAsString(routePage);
-        System.out.println("RoutePageJson = " + RoutePageJson);
         response.getWriter().print(RoutePageJson);
     }
 }
