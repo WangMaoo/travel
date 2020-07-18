@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/route-detail.css">
+    <script src="js/getParameter.js"></script>
 </head>
 
 <body>
@@ -15,14 +16,14 @@
 <!-- 详情 start -->
 <div class="wrap">
     <div class="bread_box">
-        <a href="/">首页</a>
+        <!--<a href="/">首页</a>
         <span> &gt;</span>
         <a href="#">国内游</a><span> &gt;</span>
-        <a href="#">全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</a>
+        <a href="#">全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</a>-->
     </div>
     <div class="prosum_box">
         <dl class="prosum_left">
-            <dt>
+            <!--<dt>
                 <img alt="" class="big_img" src="img/product/size4/m42bdf1849b307712c4a0843b89ed83b5f.jpg">
             </dt>
             <dd>
@@ -46,22 +47,22 @@
                     <img src="img/product/size2/m2d4e24bd288c8b9ecbd81d20dbf9fe5bc.jpg">
                 </a>
                 <a class="down_img down_img_disable" style="margin-bottom: 0;"></a>
-            </dd>
+            </dd>-->
         </dl>
         <div class="prosum_right">
-            <p class="pros_title">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</p>
+            <!--<p class="pros_title">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往返机票自由行二次确认</p>
             <p class="hot">1-2月出发，网付立享￥1099/2人起！爆款位置有限，抢完即止！</p>
             <div class="pros_other">
                 <p>经营商家  ：黑马国旅</p>
                 <p>咨询电话 : 400-618-9090</p>
                 <p>地址 ： 传智播客黑马程序员</p>
-            </div>
+            </div>-->
             <div class="pros_price">
-                <p class="price"><strong>¥2699.00</strong><span>起</span></p>
+               <!-- <p class="price"><strong>¥2699.00</strong><span>起</span></p>-->
                 <p class="collect">
                     <a class="btn"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
                     <a  class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
-                    <span>已收藏100次</span>
+                    <span id="countGet">已收藏100次</span>
                 </p>
             </div>
         </div>
@@ -113,7 +114,57 @@
             "rid":rid
         }
         $.get(url,params,function (resultData) {
+            var category = resultData.category
+            var seller = resultData.seller
+            var routeImgList = resultData.routeImgList
 
+            /**
+             * 拼接详情页面的菜单提示
+             */
+            $(".bread_box").html(`<a href="index.html">首页</a>
+                <span> &gt;</span>
+                <a href="route_list.html?category=${category.cid}">${category.cname}</a><span> &gt;</span>
+                <a href="#">${resultData.rname}</a>`)
+
+            /**
+             * 展示图片
+             */
+            $(".prosum_left").empty();
+            $(".prosum_left").append(`<dt>
+                <img alt="" class="big_img" src="${resultData.rimage}">
+            </dt>`)
+            //向上的按钮
+            var routeImgStr = `<dd>
+                <a class="up_img up_img_disable"></a>`
+            for (let i = 0; i < routeImgList.length; i++) {
+                var routeImg = routeImgList[i]
+                if (i > 3) {
+                    routeImgStr += `<a title="" class="little_img" data-bigpic="${routeImg.bigPic}" style="display: none">
+                    <img src="${routeImg.smallPic}">
+                </a>`;
+                } else {
+                    routeImgStr += `<a title="" class="little_img" data-bigpic="${routeImg.bigPic}">
+                    <img src="${routeImg.smallPic}">
+                </a>`;
+                }
+            }
+            //向下的按钮
+            routeImgStr+=`<a class="down_img down_img_disable" style="margin-bottom: 0;"></a>
+            </dd>`
+            $(".prosum_left").append(routeImgStr)
+
+            /**
+             * 右边的商家信息
+             */
+            $(".prosum_right").prepend(`<p class="pros_title">${resultData.rname}</p>
+            <p class="hot">${resultData.routeIntroduce}</p>
+            <div class="pros_other">
+                <p>经营商家  ：${seller.sname}</p>
+                <p>咨询电话 : ${seller.consphone}</p>
+                <p>地址 ： ${seller.address}</p>
+            </div>`)
+            $(".price").html(`¥${resultData.price}`);
+            $("#countGet").html(`已收藏${resultData.count}次`);
         },"json")
 
     }
