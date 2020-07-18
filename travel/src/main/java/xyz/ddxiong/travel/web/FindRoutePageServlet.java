@@ -38,8 +38,9 @@ public class FindRoutePageServlet extends BeanServlet {
             pageNumber = 1;
         }
         String cid = request.getParameter("cid");
+        String rname = request.getParameter("rname");
         RoutePageService routePageService = (RoutePageService) BeanFactory.getBean("RoutePageService");
-        PageBean<Route> routePage = routePageService.findRoutePage(pageSize, pageNumber, cid);
+        PageBean<Route> routePage = routePageService.findRoutePage(pageSize, pageNumber, cid,rname);
         /**
          * 将routePage对象转换为json数据返回
          */

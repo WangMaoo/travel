@@ -100,9 +100,23 @@
 <script type="text/javascript" src="js/include.js"></script>
 <script>
     $(function() {
+        findRouteByRid()
         //前端的轮播图代码
         lunbotu();
     });
+
+    function findRouteByRid() {
+        var rid = getParameter("rid")
+        var url = "findRouteByRidServlet"
+        var params = {
+            "action":"findRouteRid",
+            "rid":rid
+        }
+        $.get(url,params,function (resultData) {
+
+        },"json")
+
+    }
 
 
     //轮播图效果函数

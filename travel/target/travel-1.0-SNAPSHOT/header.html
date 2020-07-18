@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="js/getParameter.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 <!-- 头部 start -->
@@ -31,6 +33,13 @@
             <div class="search">
                 <input name="rname" id="rname" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
                 <a href="javascript:searchRoute();" class="search-button">搜索</a>
+                <script>
+                    function searchRoute() {
+                        var cid = getParameter("cid")
+                        var rname = $("#rname").val()
+                        location.href=`route_list.html?rname=${rname}&cid=${cid}`
+                    }
+                </script>
             </div>
             <div class="hottel">
                 <div class="hot_pic">
@@ -71,9 +80,10 @@
         let params = {"action":"findCategory"}
         $.post(url,params,function (resultData) {
             let categoryAllStr=`<li class="nav-active"><a href="index.html">首页</a></li>`
+            var rname = getParameter("rname")
             for (let i = 0; i < resultData.length; i++) {
                 let categoryStr = resultData[i];
-                categoryAllStr += ` <li><a href="route_list.html?cid=${categoryStr.cid}">${categoryStr.cname}</a></li>`
+                categoryAllStr += ` <li><a href="route_list.html?rname=${rname}&cid=${categoryStr.cid}">${categoryStr.cname}</a></li>`
             }
             categoryAllStr += `<li><a href="favoriterank.html">收藏排行榜</a></li>`
             $(".nav").html(categoryAllStr)

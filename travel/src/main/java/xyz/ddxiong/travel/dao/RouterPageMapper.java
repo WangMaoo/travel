@@ -18,21 +18,24 @@ public interface RouterPageMapper {
      * 根据cid查询总的条数
      *
      * @param cid
+     * @param rname
      * @return
      */
-    @Select("select count(*) from tab_route where cid = #{cid} and rflag=1 ")
-    int findAllRoute(@Param("cid") String cid);
+   /* @Select("select count(*) from tab_route where cid = #{cid} and rflag=1 ")*/
+    int findAllRoute(@Param("cid") String cid,@Param("rname") String rname);
 
     /**
      * 根据cid查询出线路数据并分页
      * @param startIndex
      * @param pageSize
      * @param cid
+     * @param rname
      * @return
      */
-    @Select("select * from tab_route where cid = #{cid} and rflag=1 limit #{startIndex},#{pageSize}")
-    List<Route> findRouteByCid(@Param("startIndex")int startIndex,
-                                @Param("pageSize")int pageSize,
-                                @Param("cid")String cid);
+   /* @Select("select * from tab_route where cid = #{cid} and rflag=1 limit #{startIndex},#{pageSize}")*/
+    List<Route> findRouteByCid(@Param("startIndex") int startIndex,
+                               @Param("pageSize") int pageSize,
+                               @Param("cid") String cid,
+                               @Param("rname") String rname);
 
 }

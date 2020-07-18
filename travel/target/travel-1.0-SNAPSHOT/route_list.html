@@ -168,13 +168,16 @@
     function findRouteByPage(pageSize,pageNumber){
         // 解析浏览器地址栏地址,获取参数的值 (调用js工具)
         var cid = getParameter("cid");
-        //alert(cid);
+        var rname = getParameter("rname")
+        rname = decodeURI(rname)
+
         var url = "findRoutePageServlet";
         var params = {
             "action":"findRoutePage", // 请求标识
             "pageSize":pageSize, // 每页显示条数
             "pageNumber":pageNumber, // 当前页页码
-            "cid":cid // 请求条件, 分类的cid值
+            "cid":cid, // 请求条件, 分类的cid值
+            "rname":rname
         };
         $.get(url,params,function (resultData) {
             var routeList = resultData.data; // 当前页面的数据信息
@@ -200,7 +203,7 @@
                                 <span>${route.price}</span>
                                 <span>起</span>
                             </p>
-                            <p><a href="route_detail.html">查看详情</a></p>
+                            <p><a href="route_detail.html?rid=${route.rid}">查看详情</a></p>
                         </div>
                     </li>`);
             }

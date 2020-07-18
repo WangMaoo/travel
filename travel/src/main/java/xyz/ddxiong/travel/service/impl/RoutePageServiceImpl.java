@@ -19,13 +19,13 @@ import java.util.List;
 public class RoutePageServiceImpl implements RoutePageService {
 
     @Override
-    public PageBean<Route> findRoutePage(int pageSize, int pageNumber, String cid) {
+    public PageBean<Route> findRoutePage(int pageSize, int pageNumber, String cid, String rname) {
         /**
          * 获取总的条数
          */
         SqlSession sqlSession = MybatisUtils.getSqlSession();
         RouterPageMapper mapper = sqlSession.getMapper(RouterPageMapper.class);
-        int totalCount = mapper.findAllRoute(cid);
+        int totalCount = mapper.findAllRoute(cid,rname);
         /**
          * 封装page的信息
          */
@@ -35,7 +35,7 @@ public class RoutePageServiceImpl implements RoutePageService {
         /**
          * 根据起始索引和每页显示的条数和条件查询线路
          */
-        List<Route> routeByCid = mapper.findRouteByCid(startIndex, pageSize, cid);
+        List<Route> routeByCid = mapper.findRouteByCid(startIndex, pageSize, cid,rname);
         pageBean.setData(routeByCid);
 
         /**

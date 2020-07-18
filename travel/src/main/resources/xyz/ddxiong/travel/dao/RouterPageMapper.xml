@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.ddxiong.travel.dao.RouterPageMapper">
+    <select id="findAllRoute" resultType="int">
+        select count(*) from tab_route
+        <where>
+            rflag = 1
+            <if test="cid!=null and cid!=''">
+                and cid = #{cid}
+            </if>
+            <if test="rname!=null and rname!=''">
+                and rname like concat('%',#{rname},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findRouteByCid" resultType="Route">
+        select * from tab_route
+        <where>
+            rflag = 1
+            <if test="cid!=null and cid !=''">
+                and cid = #{cid}
+            </if>
+            <if test="rname != null and rname !=''">
+                and rname like concat('%',#{rname},'%')
+            </if>
+            limit #{startIndex},#{pageSize}
+        </where>
+    </select>
+
+</mapper>
