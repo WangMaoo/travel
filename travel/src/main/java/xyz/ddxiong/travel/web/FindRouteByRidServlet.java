@@ -32,7 +32,6 @@ public class FindRouteByRidServlet extends BeanServlet {
          */
         Route routeDetail = routeDetailService.findRouteDetailByRid(rid);
         String s = new ObjectMapper().writeValueAsString(routeDetail);
-        System.out.println("s = " + s);
         response.getWriter().print(s);
     }
 

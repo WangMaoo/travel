@@ -20,16 +20,16 @@
                 <button type="button" onclick="searchRankData();" >搜索</button>
                 <script>
                     function searchRankData() {
-                        var routeName = $("#rname2").val()
+                        var rname = $("#rname2").val()
                         var minPrice = $("#minPrice").val()
                         var maxPrice = $("#maxPrice").val()
-                        location.href=`favoriterank.html?routeName=${routeName}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+                        location.href=`favoriterank.html?rname=${rname}&minPrice=${minPrice}&maxPrice=${maxPrice}`
                     }
                 </script>
             </div>
             <div class="list clearfix">
-                <ul>
-                    <li>
+                <ul id="routeListId">
+                    <!--<li>
                         <span class="num one">1</span>
                         <a href="route_detail.html"><img src="images/jiangxuan_4.jpg" alt=""></a>
                         <h4><a href="route_detail.html">【尾单特卖】全国-曼谷6-7天自由行 泰国出境旅游 特价往6-7天自由行 泰国出境旅游 特价往..</a></h4>
@@ -100,12 +100,12 @@
                             <b class="price">&yen;<span>899</span>起</b>
                             <span class="shouchang">已收藏450次</span>
                         </p>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
             <div class="pageNum">
-                <ul>
-                    <li><a href="">首页</a></li>
+                <ul id="laypage">
+                    <!--<li><a href="">首页</a></li>
                     <li class="threeword"><a href="#">上一页</a></li>
                     <li><a href="#">1</a></li>
                     <li><a href="#">2</a></li>
@@ -118,7 +118,7 @@
                     <li><a href="#">9</a></li>
                     <li><a href="#">10</a></li>
                     <li class="threeword"><a href="javascript:;">下一页</a></li>
-                    <li class="threeword"><a href="javascript:;">末页</a></li>
+                    <li class="threeword"><a href="javascript:;">末页</a></li>-->
                 </ul>
             </div>
         </div>
@@ -129,20 +129,77 @@
     <script type="text/javascript" src="js/include.js"></script>
     <script>
         $(function () {
-            var routeName = getParameter("routeName")
+            var pageSize = 6
+            var pageNumber = 1
+            findRankByPage(pageSize,pageNumber)
+        })
+
+        function findRankByPage(pageSize,pageNumber) {
+            var rname = getParameter("rname")
+            rname = decodeURI(rname)
             var minPrice = getParameter("minPrice")
             var maxPrice = getParameter("maxPrice")
             var url = "rankTopServlet"
             var params = {
                 "action":"findRankTop",
-                "routeName":routeName,
+                "rname":rname,
                 "minPrice":minPrice,
-                "maxPrice":maxPrice
+                "maxPrice":maxPrice,
+                "pageSize":pageSize,
+                "pageNumber":pageNumber
             }
             $.get(url,params,function (resultData) {
+                var routeList = resultData.data;
+                var pageNumber = resultData.pageNumber;
+                var totalPage = resultData.totalPage;
+                var start = resultData.start;
+                var end = resultData.end;
+                //---------- 展示当前页面的线路信息
+                var routeStr = "";
+                for (let i = 0; i < routeList.length; i++) {
+                    var route = routeList[i];
+                    routeStr += `<li>
+                        <span class="num two">${(pageNumber-1)*pageSize+i+1}</span>
+                         <a href="route_detail.html"><img src="${route.rimage}" alt=""></a>
+                        <h4><a href="route_detail.html">${route.routeIntroduce}</a></h4>
+                        <p>
+                            <b class="price">&yen;<span>${route.price}</span>起</b>
+                            <span class="shouchang">已收藏${route.count}次</span>
+                        </p>
+                    </li>`;
+                }
+                //将拼接好的字符串设置到指定位置,进行展示
+                $("#routeListId").html(routeStr);
+                //================ 分页条
+                //--------- 展示分页条
+                $("#laypage").html("");
+                // 首页
+                $("#laypage").prepend(`<li class="threeword"><a href="JavaScript:findRankByPage(${pageSize},1)">首页</a></li>`);
 
+                // 上一页
+                if(pageNumber>1){
+                    $("#laypage").append(`<li class="threeword"><a href="JavaScript:findRankByPage(${pageSize},${pageNumber-1})">上一页</a></li>`);
+                }
+                // 展示中间的页码
+                for (let i = start; i <=end; i++) {
+                    if(pageNumber==i){
+                        $("#laypage").append(`<li style="background-color: yellow;"><a href="JavaScript:findRankByPage(${pageSize},${i});">${i}</a></li>`);
+                    }else {
+                        $("#laypage").append(`<li><a href="JavaScript:findRankByPage(${pageSize},${i});">${i}</a></li>`);
+                    }
+                }
+
+                // 下一页
+                if(pageNumber<totalPage){
+                    $("#laypage").append(`<li class="threeword"><a href="JavaScript:findRankByPage(${pageSize},${pageNumber+1})">下一页</a></li>`);
+                }
+                // 尾页
+                $("#laypage").append(`<li class="threeword"><a href="JavaScript:findRankByPage(${pageSize},${totalPage})">末页</a></li>`);
+
+                // 定位到页面的指定位置
+                window.scrollTo(0,0);
             },"json")
-        })
+        }
     </script>
     </body>
 </html>

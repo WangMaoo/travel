@@ -103,7 +103,6 @@
     $(function() {
         findRouteByRid()
         //前端的轮播图代码
-        lunbotu();
     });
 
     function findRouteByRid() {
@@ -151,7 +150,9 @@
             //向下的按钮
             routeImgStr+=`<a class="down_img down_img_disable" style="margin-bottom: 0;"></a>
             </dd>`
+
             $(".prosum_left").append(routeImgStr)
+            lunbotu()
 
             /**
              * 右边的商家信息
