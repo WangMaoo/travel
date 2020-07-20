@@ -60,8 +60,8 @@
             <div class="pros_price">
                <!-- <p class="price"><strong>¥2699.00</strong><span>起</span></p>-->
                 <p class="collect">
-                    <a class="btn"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
-                    <a  class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
+                    <a id="redBtn" class="btn" href="javaScript:addFavorite()" ><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
+                    <a  id="grayBtn" class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
                     <span id="countGet">已收藏100次</span>
                 </p>
             </div>
@@ -100,10 +100,55 @@
 <!--导入布局js，共享header和footer-->
 <script type="text/javascript" src="js/include.js"></script>
 <script>
+
+
+    /**
+     * 添加收藏
+     */
+    function addFavorite() {
+        var rid = getParameter("rid")
+        var url = "favoriteServlet"
+        var params = {
+            "action":"addFavorite",
+            "rid":rid
+        }
+        $.get(url,params,function (resultData) {
+            if (resultData.flag) {
+                $("#grayBtn").show()
+                $("#redBtn").hide()
+                $("#countGet").html(`已收藏${resultData.successData.count}次`)
+            } else {
+                alert("请先登陆")
+                location.href="login.html"
+            }
+        },"json")
+    }
+
+
     $(function() {
         findRouteByRid()
-        //前端的轮播图代码
+        getFavoriteStatus()
     });
+
+     /**
+     * 获取登陆的状态
+     */
+    function getFavoriteStatus(){
+        var rid = getParameter("rid")
+        var url = "favoriteServlet"
+        var params = {
+            "action":"getFavoriteStatus",
+            "rid":rid
+        }
+        $.get(url,params,function (resultData) {
+            if (resultData == 0) {
+                $("#grayBtn").hide();
+            } else if (resultData == 1) {
+                $("#redBtn").hide();
+                $("#grayBtn").show()
+            }
+        },"text")
+    }
 
     function findRouteByRid() {
         var rid = getParameter("rid")
@@ -169,6 +214,8 @@
         },"json")
 
     }
+
+
 
 
     //轮播图效果函数

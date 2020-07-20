@@ -6,6 +6,7 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/common.css">
         <link rel="stylesheet" href="css/index.css">
+        <script src="js/jquery-3.3.1.min.js"></script>
        <style>
            .tab-content .row>div {
             margin-top: 16px;
@@ -14,7 +15,7 @@
             margin-bottom: 36px;
            }
        </style>
-       <script src="js/jquery-3.3.1.min.js"></script>
+
     </head>
     <body>
     <!--引入头部-->
@@ -33,6 +34,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="home">
                             <div class="row">
+                                <!--
                                 <div class="col-md-3">
                                     <a href="route_detail.html">
                                         <img src="images/collection_pic.jpg" alt="">
@@ -141,13 +143,13 @@
                                         </div>
                                     </a>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>                       
                     </div>
                 </div>
                 <div class="pageNum">
-                    <ul>
-                        <li><a href="">首页</a></li>
+                    <ul id="laypage">
+                        <!--<li><a href="">首页</a></li>
                         <li class="threeword"><a href="#">上一页</a></li>
                         <li><a href="#">1</a></li>
                         <li><a href="#">2</a></li>
@@ -160,7 +162,7 @@
                         <li><a href="#">9</a></li>
                         <li><a href="#">10</a></li>
                         <li class="threeword"><a href="javascript:;">下一页</a></li>
-                        <li class="threeword"><a href="javascript:;">末页</a></li>
+                        <li class="threeword"><a href="javascript:;">末页</a></li>-->
                     </ul>
                 </div>
             </section>                      
@@ -171,5 +173,68 @@
     	<div id="footer"></div>
         <!--导入布局js，共享header和footer-->
         <script type="text/javascript" src="js/include.js"></script>
+    <script>
+        $(function () {
+            var pageSize = 10
+            var pageNumber = 1
+            findFavoriteByPage(pageSize,pageNumber)
+        })
+        function findFavoriteByPage(pageSize,pageNumber) {
+            var url = "favoriteServlet"
+            var params = {
+                "action":"findFavoriteByPage",
+                "pageSize":pageSize,
+                "pageNumber":pageNumber
+
+            }
+
+            $.get(url,params,function (resultData) {
+                var routeList = resultData.data;
+                var pageNumber = resultData.pageNumber;
+                var totalPage = resultData.totalPage;
+                var start = resultData.start;
+                var end = resultData.end;
+                var routeStr = ``;
+                for (let i = 0; i < routeList.length; i++) {
+                    var route = routeList[i];
+                    routeStr += `<div class="col-md-3">
+                          <a href="route_detail.html?rid=${route.rid}">
+                              <img src="${route.rimage}" alt="">
+                              <div class="has_border">
+                                  <h3>${route.rname}</h3>
+                                  <div class="price">网付价<em>￥</em><strong>${route.price}</strong><em>起</em></div>
+                              </div>
+                          </a>
+                      </div>`;
+                }
+                $(".row").html(routeStr);
+                //------------ 展示分页条
+                $("#laypage").html("");
+                // 首页
+                $("#laypage").prepend(`<li class="threeword"><a href="JavaScript:findFavoriteByPage(${pageSize},1)">首页</a></li>`);
+
+                // 上一页
+                if(pageNumber>1){
+                    $("#laypage").append(`<li class="threeword"><a href="JavaScript:findFavoriteByPage(${pageSize},${pageNumber-1})">上一页</a></li>`);
+                }
+                // 展示中间的页码
+                for (let i = start; i <=end; i++) {
+                    if(pageNumber==i){
+                        $("#laypage").append(`<li style="background-color: gray;"><a href="JavaScript:findFavoriteByPage(${pageSize},${i});">${i}</a></li>`);
+                    }else {
+                        $("#laypage").append(`<li><a href="JavaScript:findFavoriteByPage(${pageSize},${i});">${i}</a></li>`);
+                    }
+                }
+
+                // 下一页
+                if(pageNumber<totalPage){
+                    $("#laypage").append(`<li class="threeword"><a href="JavaScript:findFavoriteByPage(${pageSize},${pageNumber+1})">下一页</a></li>`);
+                }
+                // 尾页
+                $("#laypage").append(`<li class="threeword"><a href="JavaScript:findFavoriteByPage(${pageSize},${totalPage})">末页</a></li>`);
+
+            },"json");
+        }
+    </script>
     </body>
 </html>

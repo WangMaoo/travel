@@ -55,7 +55,6 @@ public class RankTopServlet extends BeanServlet {
          */
         ObjectMapper objectMapper = new ObjectMapper();
         String s = objectMapper.writeValueAsString(rankRoute);
-        System.out.println("s = " + s);
         response.getWriter().print(s);
     }
 

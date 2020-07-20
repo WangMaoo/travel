@@ -183,7 +183,7 @@
                 // 展示中间的页码
                 for (let i = start; i <=end; i++) {
                     if(pageNumber==i){
-                        $("#laypage").append(`<li style="background-color: yellow;"><a href="JavaScript:findRankByPage(${pageSize},${i});">${i}</a></li>`);
+                        $("#laypage").append(`<li style="background-color: gray;"><a href="JavaScript:findRankByPage(${pageSize},${i});">${i}</a></li>`);
                     }else {
                         $("#laypage").append(`<li><a href="JavaScript:findRankByPage(${pageSize},${i});">${i}</a></li>`);
                     }

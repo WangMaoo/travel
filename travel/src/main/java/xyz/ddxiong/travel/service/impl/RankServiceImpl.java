@@ -23,7 +23,6 @@ public class RankServiceImpl implements RankService {
         SqlSession sqlSession = MybatisUtils.getSqlSession();
         RankMapper mapper = sqlSession.getMapper(RankMapper.class);
         int totalCount = mapper.findTotalCount(rname, minPrice, maxPrice);
-        System.out.println("totalCount = " + totalCount);
         /**
          * 创建分页对象
          */
